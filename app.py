@@ -1,8 +1,11 @@
 import discord
 import logging
 import management
+import message_util
 import os
 
+from datetime import datetime
+from dateutil import tz
 from dotenv import load_dotenv
 
 # Set up the environment from `.env`
@@ -10,6 +13,11 @@ load_dotenv()
 
 if "DISCORD_BOT_TOKEN" not in os.environ:
     raise RuntimeError("DISCORD_BOT_TOKEN must be defined in the environment.")
+
+# Using Eastern time here because that's the most-forward TZ of the group I'm
+# building this for
+_US_EASTERN = tz.gettz("US/Eastern")
+_WORDLE_DAY_ZERO = datetime(2021, 6, 19, tzinfo=_US_EASTERN)
 
 
 class Discordle(discord.Client):
@@ -37,7 +45,15 @@ class Discordle(discord.Client):
             await management.configure_wordler_channel(guild, wordler_role)
 
     async def on_message(self, message: discord.Message):
-        print(message.content)
+        message_wordle_number = message_util.get_wordle_number(message.content)
+        if message_wordle_number is None:
+            return
+
+        current_wordle_number = (datetime.now(tz=_US_EASTERN) -
+                                 _WORDLE_DAY_ZERO).days
+        if message_wordle_number == current_wordle_number:
+            # TODO grant access
+            print("Great success!")
 
 
 if __name__ == "__main__":
