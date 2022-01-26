@@ -1,7 +1,6 @@
 import discord
 
-# Add a non-printing space to the end as a human-namespace-collision-avoider.
-_WORDLER_ROLE = "wordler\u200B"
+_WORDLER_ROLE = "Wordled today"
 
 
 async def get_wordler_role(guild):
@@ -26,8 +25,8 @@ async def configure_wordler_channel(guild, role):
             break
 
     if wordler_channel:
-        _configure_visibility(wordler_channel, guild.default_role, False)
-        _configure_visibility(wordler_channel, role, True)
+        await _configure_visibility(wordler_channel, guild.default_role, False)
+        await _configure_visibility(wordler_channel, role, True)
     else:
         await guild.create_text_channel(
             name="wordle-spoilers",
