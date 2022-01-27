@@ -40,6 +40,11 @@ async def configure_wordler_channel(guild, role):
     return wordler_channel
 
 
+async def grant_wordler_role(message: discord.Message):
+    wordler_role = await get_wordler_role(message.guild)
+    await message.author.add_roles(wordler_role)
+
+
 async def _configure_visibility(channel, role, read_messages):
     if channel.overwrites_for(role).read_messages != read_messages:
         await channel.set_permissions(role, read_messages=read_messages)

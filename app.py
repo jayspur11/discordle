@@ -52,8 +52,7 @@ class Discordle(discord.Client):
         current_wordle_number = (datetime.now(tz=_US_EASTERN) -
                                  _WORDLE_DAY_ZERO).days
         if message_wordle_number == current_wordle_number:
-            # TODO grant access
-            print("Great success!")
+            await management.grant_wordler_role(message)
 
 
 if __name__ == "__main__":
