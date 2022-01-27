@@ -3,7 +3,8 @@ import discord
 _WORDLER_ROLE = "Wordled today"
 
 
-async def get_wordler_role(guild):
+async def get_wordler_role(guild: discord.Guild) -> discord.Role:
+    """Retrieve (or create) the Wordler role on the given server."""
     wordler_role = None
     for role in guild.roles:
         if role.name == _WORDLER_ROLE:
@@ -43,6 +44,13 @@ async def configure_wordler_channel(guild, role):
 async def grant_wordler_role(message: discord.Message):
     wordler_role = await get_wordler_role(message.guild)
     await message.author.add_roles(wordler_role)
+
+
+async def revoke_wordler_roles(guilds):
+    for guild in guilds:
+        wordler_role = await get_wordler_role(guild)
+        for member in wordler_role.members:
+            member.remove_roles(wordler_role)
 
 
 async def _configure_visibility(channel, role, read_messages):

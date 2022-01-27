@@ -4,7 +4,8 @@ import management
 import message_util
 import os
 
-from datetime import datetime
+from asyncio import run_coroutine_threadsafe
+from datetime import datetime, time, timedelta
 from dateutil import tz
 from dotenv import load_dotenv
 
@@ -31,6 +32,19 @@ class Discordle(discord.Client):
 
         self.checked_guilds = False
 
+    async def revoke(self):
+        await management.revoke_wordler_roles(self.guilds)
+        self.schedule_revocation()
+
+    def schedule_revocation(self):
+        tomorrow = datetime.now(tz=_US_EASTERN).date() + timedelta(days=1)
+        midnight = time(0, 0, tzinfo=_US_EASTERN)
+        tomorrow_midnight = datetime.combine(tomorrow,
+                                             midnight,
+                                             tzinfo=_US_EASTERN)
+        self.loop.call_at(tomorrow_midnight.timestamp(),
+                          run_coroutine_threadsafe, self.revoke(), self.loop)
+
     # Event handlers
     async def on_ready(self):
         logging.info("Discordle ready!")
@@ -40,6 +54,7 @@ class Discordle(discord.Client):
             return
         self.checked_guilds = True
 
+        self.schedule_revocation()
         for guild in self.guilds:
             wordler_role = await management.get_wordler_role(guild)
             await management.configure_wordler_channel(guild, wordler_role)
