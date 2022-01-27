@@ -3,6 +3,11 @@ import discord
 _WORDLER_ROLE = "Wordled today"
 
 
+async def configure_guild(guild):
+    wordler_role = await get_wordler_role(guild)
+    await configure_wordler_channel(guild, wordler_role)
+
+
 async def get_wordler_role(guild: discord.Guild) -> discord.Role:
     """Retrieve (or create) the Wordler role on the given server."""
     wordler_role = None

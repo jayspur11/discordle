@@ -56,8 +56,7 @@ class Discordle(discord.Client):
 
         self.schedule_revocation()
         for guild in self.guilds:
-            wordler_role = await management.get_wordler_role(guild)
-            await management.configure_wordler_channel(guild, wordler_role)
+            await management.configure_guild(guild)
 
     async def on_message(self, message: discord.Message):
         message_wordle_number = message_util.get_wordle_number(message.content)
@@ -68,6 +67,9 @@ class Discordle(discord.Client):
                                  _WORDLE_DAY_ZERO).days
         if message_wordle_number == current_wordle_number:
             await management.grant_wordler_role(message)
+
+    async def on_guild_join(self, guild):
+        await management.configure_guild(guild)
 
 
 if __name__ == "__main__":
