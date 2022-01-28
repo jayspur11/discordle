@@ -24,9 +24,9 @@ class Discordle(discord.Client):
 
     def __init__(self):
         intents = discord.Intents.none()
-        intents.guilds = True
-        intents.guild_messages = True
-        intents.members = True
+        intents.guilds = True  # need this to see our guild info
+        intents.guild_messages = True  # need this to get informed of new msgs
+        intents.members = True  # need this to see member lists
         super().__init__(intents=intents)
 
         self.checked_guilds = False
