@@ -26,7 +26,6 @@ class Discordle(discord.Client):
     def __init__(self):
         intents = discord.Intents.none()
         intents.guilds = True
-        intents.members = True
         intents.guild_messages = True
         super().__init__(intents=intents)
 
