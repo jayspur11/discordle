@@ -27,6 +27,7 @@ class Discordle(discord.Client):
         intents = discord.Intents.none()
         intents.guilds = True
         intents.guild_messages = True
+        intents.members = True
         super().__init__(intents=intents)
 
         self.checked_guilds = False
