@@ -4,7 +4,6 @@ import management
 import message_util
 import os
 
-from asyncio import run_coroutine_threadsafe
 from datetime import datetime, time, timedelta
 from dateutil import tz
 from dotenv import load_dotenv
@@ -42,8 +41,8 @@ class Discordle(discord.Client):
         tomorrow_midnight = datetime.combine(tomorrow,
                                              midnight,
                                              tzinfo=_US_EASTERN)
-        self.loop.call_at(tomorrow_midnight.timestamp(),
-                          run_coroutine_threadsafe, self.revoke(), self.loop)
+        self.loop.call_at(tomorrow_midnight.timestamp(), self.loop.create_task,
+                          self.revoke())
 
     # Event handlers
     async def on_ready(self):
