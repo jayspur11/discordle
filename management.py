@@ -54,8 +54,9 @@ async def grant_wordler_role(message: discord.Message):
 async def revoke_wordler_roles(guilds):
     for guild in guilds:
         wordler_role = await get_wordler_role(guild)
+        member: discord.Member
         for member in wordler_role.members:
-            member.remove_roles(wordler_role)
+            await member.remove_roles(wordler_role)
 
 
 async def _configure_visibility(channel, role, read_messages):
