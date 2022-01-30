@@ -41,8 +41,11 @@ class Discordle(discord.Client):
         tomorrow_midnight = datetime.combine(tomorrow,
                                              midnight,
                                              tzinfo=_US_EASTERN)
-        self.loop.call_at(tomorrow_midnight.timestamp(), self.loop.create_task,
-                          self.revoke())
+        tomorrow_midnight_timedelta = tomorrow_midnight - datetime.now(tz=_US_EASTERN)
+        self.loop.call_later(
+            tomorrow_midnight_timedelta.seconds,
+            self.loop.create_task,
+            self.revoke())
 
     # Event handlers
     async def on_ready(self):
